@@ -20,30 +20,54 @@ document.addEventListener("DOMContentLoaded", async function () {
   const response = await instanceCity.get();
 
   for (const i in response.data) {
-    const location = await instanceLocation.get("", {
-      params: {
-        q: response.data[i].codename,
-        appid: api_key,
-        limit: 1,
-      },
-    });
+    const option = createOption(response.data[i]);
+    city.appendChild(option);
 
-    if (location.data.length !== 0) {
-      const option = createOption(response.data[i]);
-      city.appendChild(option);
-    } 
+    // if (location.data.length !== 0) {
+    //   const option = createOption(response.data[i]);
+    //   city.appendChild(option);
+    // }
   }
 
   city.value = "thanh_pho_ho_chi_minh";
 
+  const location = await instanceLocation.get("", {
+    params: {
+      q: "thanh_pho_ho_chi_minh",
+      appid: api_key,
+      limit: 1,
+    },
+  });
+
   locationName.innerText = city.options[city.selectedIndex].text;
 
-  getWeather(getCityFromList(city.options[city.selectedIndex].value));
+  getWeather(location.data[0].lat, location.data[0].lon);
 });
 
-city.onchange = function () {
+city.onchange = async function () {
   locationName.innerText = city.options[city.selectedIndex].text;
-  getWeather(getCityFromList(city.options[city.selectedIndex].value));
+
+  const location = await instanceLocation.get("", {
+    params: {
+      q: city.options[city.selectedIndex].value,
+      appid: api_key,
+      limit: 1,
+    },
+  });
+
+  if (location.data.length === 0) {
+    desc.innerText = "--";
+    temp.innerText = "--°C";
+    realFeel.innerText = "--°C";
+    humidity.innerText = "-- %";
+    windSpeed.innerText = "-- km/h";
+    clouds.innerText = "-- %";
+    visibility.innerText = "-- km";
+    img.setAttribute("src", "./img/question_icon.svg");
+    return;
+  }
+
+  getWeather(location.data[0].lat, location.data[0].lon);
 };
 
 function createOption(data) {
@@ -54,15 +78,11 @@ function createOption(data) {
   return option;
 }
 
-function getCityFromList(code) {
-  return cityList.find((item) => item.codename === code);
-}
-
-async function getWeather(currentCity) {
+async function getWeather(lat, lon) {
   const result = await instanceWeather.get("", {
     params: {
-      lat: currentCity.coord.lat,
-      lon: currentCity.coord.lon,
+      lat,
+      lon,
       appid: api_key,
       lang: "vi",
       units: "Metric",
@@ -75,6 +95,8 @@ async function getWeather(currentCity) {
     img.setAttribute("src", "./img/rainny_icon.svg");
   else if (detail.toUpperCase().includes("MÂY CỤM"))
     img.setAttribute("src", "./img/broken_clouds_icon.svg");
+  else if (detail.toUpperCase().includes("NẮNG"))
+    img.setAttribute("src", "./img/sun_icon.svg");
   else img.setAttribute("src", "./img/cloudy_icon.svg");
 
   desc.innerText = detail;
