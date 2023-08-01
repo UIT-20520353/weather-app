@@ -1,6 +1,6 @@
 "use strict";
 
-import { instanceCity, instanceWeather } from "./data.js";
+import { instanceCity, instanceWeather, instanceLocation } from "./data.js";
 import { cityList } from "./city.list.js";
 
 const city = document.getElementById("city");
@@ -20,8 +20,20 @@ document.addEventListener("DOMContentLoaded", async function () {
   const response = await instanceCity.get();
 
   for (const i in response.data) {
-    const option = createOption(response.data[i]);
-    city.appendChild(option);
+    const location = await instanceLocation.get("", {
+      params: {
+        q: response.data[i].codename,
+        appid: api_key,
+        limit: 1,
+      },
+    });
+
+    if (location.data.length !== 0) {
+      const option = createOption(response.data[i]);
+      city.appendChild(option);
+    } else {
+      console.log(response.data[i]);
+    }
   }
 
   city.value = "thanh_pho_ho_chi_minh";

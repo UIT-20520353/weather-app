@@ -6,4 +6,8 @@ const instanceWeather = axios.create({
   baseURL: "https://api.openweathermap.org/data/2.5/weather/",
 });
 
-export { instanceCity, instanceWeather };
+const instanceLocation = axios.create({
+  baseURL: "http://api.openweathermap.org/geo/1.0/direct",
+});
+
+export { instanceCity, instanceWeather, instanceLocation };
