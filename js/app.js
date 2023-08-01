@@ -31,9 +31,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (location.data.length !== 0) {
       const option = createOption(response.data[i]);
       city.appendChild(option);
-    } else {
-      console.log(response.data[i]);
-    }
+    } 
   }
 
   city.value = "thanh_pho_ho_chi_minh";
