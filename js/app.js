@@ -99,7 +99,7 @@ async function getWeather(lat, lon) {
     img.setAttribute("src", "./img/sun_icon.svg");
   else img.setAttribute("src", "./img/cloudy_icon.svg");
 
-  desc.innerText = detail;
+  desc.innerText = capitalizeFirstLetter(detail);
   temp.innerText = `${Math.round(result.data.main.temp)}°C`;
   realFeel.innerText = `${Math.round(result.data.main.feels_like)}°C`;
   humidity.innerText = `${result.data.main.humidity}%`;
@@ -110,4 +110,8 @@ async function getWeather(lat, lon) {
   } else {
     visibility.innerText = `${Math.round(result.data.visibility / 1000)} km`;
   }
+}
+
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
