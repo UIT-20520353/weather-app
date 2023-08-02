@@ -1,7 +1,6 @@
 "use strict";
 
 import { instanceCity, instanceWeather, instanceLocation } from "./data.js";
-import { cityList } from "./city.list.js";
 
 const city = document.getElementById("city");
 const locationName = document.getElementById("location__name");
@@ -50,20 +49,7 @@ city.onchange = async function () {
     },
   });
 
-  if (location.data.length === 0) {
-    getWeather(null, null);
-    // desc.innerText = "--";
-    // temp.innerText = "--°C";
-    // realFeel.innerText = "--°C";
-    // humidity.innerText = "-- %";
-    // windSpeed.innerText = "-- km/h";
-    // clouds.innerText = "-- %";
-    // visibility.innerText = "-- km";
-    // img.setAttribute("src", "./img/question_icon.svg");
-    return;
-  }
-
-  getWeather(location.data[0].lat, location.data[0].lon);
+  getWeather(location.data[0]?.lat, location.data[0]?.lon);
 };
 
 function createOption(data) {
@@ -87,9 +73,6 @@ async function getWeather(lat, lon) {
         units: "Metric",
       },
     });
-  // else result = {
-
-  // }
 
   const detail = result?.data.weather[0].description || null;
 
