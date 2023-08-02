@@ -109,7 +109,7 @@ async function getWeather(lat, lon) {
   windSpeed.innerText = `${
     Math.round(result?.data.wind.speed * 3.6) || "--"
   } km/h`;
-  clouds.innerText = `${result?.data.clouds.all} %`;
+  clouds.innerText = `${result?.data.clouds.all || "--"} %`;
   if (result?.data.visibility >= 10000) {
     visibility.innerText = "Trên 10 km";
   } else {
